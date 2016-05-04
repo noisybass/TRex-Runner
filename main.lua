@@ -17,7 +17,7 @@ local trex = {
 }
 
 function updateTrex(dt)
-	trex.run: update(dt)
+	trex.anim: update(dt)
 
 	local speed = trex.speed
 
@@ -34,14 +34,17 @@ function updateTrex(dt)
 	end
 
 	if dx ~= 0 or dy ~= 0 then
+		trex.anim = trex.run
 		local cols
 		trex.x, trex.y, cols, cols_len = world: move(trex, trex.x + dx, trex.y + dy)
+	else
+		trex.anim = trex.idle
 	end
 end
 
 function drawTrex()
 	drawBox(trex, 0, 255, 0)
-	trex.run: draw(image, trex.x, trex.y)
+	trex.anim: draw(image, trex.x, trex.y)
 end
 
 -- Blocks
@@ -64,11 +67,13 @@ end
 
 function love.load()
 
-	image = love.graphics.newImage('media/trex_run.png')
+	image = love.graphics.newImage('media/trex.png')
 
-	local grid = anim8.newGrid(76, 76, 152, 76)
+	local grid = anim8.newGrid(76, 76, 76*3, 76)
 
-	trex.run = anim8.newAnimation(grid('1-2', 1), 0.1)
+	trex.idle = anim8.newAnimation(grid(1, 1), 0.1)
+	trex.run = anim8.newAnimation(grid('2-3', 1), 0.1)
+	trex.anim = trex.run
 
 	world: add(trex, trex.x, trex.y, trex.w, trex.h)
 
