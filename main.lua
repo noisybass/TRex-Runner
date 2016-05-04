@@ -1,8 +1,6 @@
 local anim8 = require 'anim8'
 local bump = require 'bump'
 
-local cols_len = 0 -- how many collisions are happening
-
 -- World creation
 local world = bump.newWorld()
 
@@ -13,32 +11,55 @@ local trex = {
 	y = 200,
 	w = 76,
 	h = 76,
-	speed = 150
+	vx = 150,
+	vy = 50000,
+	gravity = 100,
+	onGround = false
 }
 
 function updateTrex(dt)
 	trex.anim: update(dt)
 
-	local speed = trex.speed
+	local vx, vy = trex.vx, trex.vy
 
 	local dx, dy = 0, 0
+
 	if love.keyboard.isDown("left") or love.keyboard.isDown("a") then
-		dx = -speed * dt
+		dx = -vx * dt
 	elseif love.keyboard.isDown("right") or love.keyboard.isDown("d") then
-		dx = speed * dt
+		dx = vx * dt
 	end
-	if love.keyboard.isDown("up") or love.keyboard.isDown("w") then
-		dy = -speed * dt
-	elseif love.keyboard.isDown("down") or love.keyboard.isDown("s") then
-		dy = speed * dt
+
+	if (love.keyboard.isDown("up") or love.keyboard.isDown("w")) and trex.onGround then
+		dy = -vy * dt
 	end
+
+	if love.keyboard.isDown("space") and trex.onGround then
+		trex.anim: flipH()
+	end
+
+	dy = dy + trex.gravity * dt
 
 	if dx ~= 0 or dy ~= 0 then
 		trex.anim = trex.run
-		local cols
-		trex.x, trex.y, cols, cols_len = world: move(trex, trex.x + dx, trex.y + dy)
+		local cols, len
+		trex.x, trex.y, cols, len = world: move(trex, trex.x + dx, trex.y + dy)
+
+		trex.onGround = false
+		for i = 1, len do
+			local col = cols[i]
+			checkIfOnGround(col.normal.y)
+		end
 	else
 		trex.anim = trex.idle
+	end
+end
+
+function checkIfOnGround(ny)
+	if ny < 0 then
+		trex.onGround = true
+	else
+		trex.onGround = false
 	end
 end
 
