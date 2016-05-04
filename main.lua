@@ -1,92 +1,95 @@
 local anim8 = require 'anim8'
+local bump = require 'bump'
 
-local x, y = 400, 300
+local cols_len = 0 -- how many collisions are happening
+
+-- World creation
+local world = bump.newWorld()
+
+
+-- Trex
+local trex = {
+	x = 400,
+	y = 200,
+	w = 76,
+	h = 76,
+	speed = 150
+}
+
+function updateTrex(dt)
+	trex.run: update(dt)
+
+	local speed = trex.speed
+
+	local dx, dy = 0, 0
+	if love.keyboard.isDown("left") or love.keyboard.isDown("a") then
+		dx = -speed * dt
+	elseif love.keyboard.isDown("right") or love.keyboard.isDown("d") then
+		dx = speed * dt
+	end
+	if love.keyboard.isDown("up") or love.keyboard.isDown("w") then
+		dy = -speed * dt
+	elseif love.keyboard.isDown("down") or love.keyboard.isDown("s") then
+		dy = speed * dt
+	end
+
+	if dx ~= 0 or dy ~= 0 then
+		local cols
+		trex.x, trex.y, cols, cols_len = world: move(trex, trex.x + dx, trex.y + dy)
+	end
+end
+
+function drawTrex()
+	drawBox(trex, 0, 255, 0)
+	trex.run: draw(image, trex.x, trex.y)
+end
+
+-- Blocks
+local blocks = {}
+
+function addBlock(x, y, w, h)
+	local block = { x = x, y = y, w = w, h = h }
+	blocks[#blocks + 1] = block
+	world: add(block, x, y, w, h)
+end
+
+function drawBlocks()
+	for _, block in ipairs(blocks) do
+		drawBox(block, 0, 0, 255)
+	end
+end
+
+
+------------------------------------------------
 
 function love.load()
 
-	-- One meter is 64px in physics engine
-	love.physics.setMeter(64)
-
-	-- Create a world with standard gravity
-	world = love.physics.newWorld(0, 9.81*64, true)
-
-	-- Create the ground body at (0, 0) static
-	ground = love.physics.newBody(world, 0, 0, "static")
-	
-	-- Create the ground shape at (400,500) with size (600,10).
-	ground_shape = love.physics.newRectangleShape( 400, 500, 600, 10)
-
-	-- Create fixture between body and shape
-	ground_fixture = love.physics.newFixture( ground, ground_shape)
-
 	image = love.graphics.newImage('media/trex_run.png')
 
-	-- Create a Body for the circle
-	body = love.physics.newBody(world, 400, 200, "dynamic")
-	
-	-- Attatch a shape to the body.
-	circle_shape = love.physics.newRectangleShape( 0, 0, 128, 128)
-	
-    -- Create fixture between body and shape
-    fixture = love.physics.newFixture( body, circle_shape)
+	local grid = anim8.newGrid(76, 76, 152, 76)
 
-    -- Calculate the mass of the body based on attatched shapes.
-	-- This gives realistic simulations.
-	body:setMassData(circle_shape:computeMass( 1 ))
+	trex.run = anim8.newAnimation(grid('1-2', 1), 0.1)
 
+	world: add(trex, trex.x, trex.y, trex.w, trex.h)
 
+	addBlock(0, 0, 800, 32)
+	addBlock(0, 32, 32, 600 - 32*2)
+	addBlock(800 - 32, 32, 32, 600 - 32*2)
+	addBlock(0, 600-32, 800, 32)
 
-	local grid = anim8.newGrid(128, 128, 256, 128)
-
-	animation = anim8.newAnimation(grid('1-2', 1), 0.1)
 end
 
 function love.update(dt)
 
-	-- Update the world.
-	world:update(dt)
+	updateTrex(dt)
 
-	if love.keyboard.isDown("left") or love.keyboard.isDown("a") then
-		x = x - 100 * dt
-	end
-	if love.keyboard.isDown("right") or love.keyboard.isDown("d") then
-		x = x + 100 * dt
-	end
-	if love.keyboard.isDown("up") or love.keyboard.isDown("w") then
-		y = y - 100 * dt
-	end
-	if love.keyboard.isDown("down") or love.keyboard.isDown("s") then
-		y = y + 100 * dt
-	end
-	if love.keyboard.isDown("space") then
-		-- Apply a random impulse
-		body:applyLinearImpulse(0,-10)
-	end
-
-	--if love.mouse.isDown(1) then
-	--	animation: pause()
-	--elseif love.mouse.isDown(2) then
-	--	animation: resume()
-	--else
-		animation: update(dt)
-	--end
 end
 
 function love.draw()
 
-	-- Draws the ground.
-	love.graphics.polygon("line", ground:getWorldPoints(ground_shape:getPoints()))
+	drawBlocks()
+	drawTrex()
 
-	--love.graphics.draw(image,body:getX(), body:getY(), body:getAngle(),1,1,64,64)
-
-	--animation: draw(image, x, y)
-	animation: draw(image, body:getX() - 64, body:getY() - 64)
-end
-
-function love.mousepressed(x, y, button, istouch)
-	if button == 1 then
-		animation: flipH()
-	end
 end
 
 function love.keypressed(key)
@@ -94,3 +97,20 @@ function love.keypressed(key)
        love.event.quit()
     end
 end
+
+function drawBox(box, r, g, b)
+	love.graphics.setColor(r, g, b, 70)
+	love.graphics.rectangle("fill", box.x, box.y, box.w, box.h)
+	love.graphics.setColor(r, g, b)
+	love.graphics.rectangle("line", box.x, box.y, box.w, box.h)
+end
+
+
+
+--[[function love.mousepressed(x, y, button, istouch)
+	local x, y = body: getLinearVelocity()
+	if button == 1 and y == 0 then
+		animation: flipH()
+		body: applyLinearImpulse(0,-2000)
+	end
+end]]
