@@ -12,9 +12,11 @@ local trex = {
 	w = 76,
 	h = 76,
 	vx = 150,
-	vy = 50000,
-	gravity = 100,
-	onGround = false
+	vy = 600,
+	gravity = 300,
+	onGround = false,
+	maxJumpTime = 0.5,
+	jumpTime = maxJumpTime
 }
 
 function updateTrex(dt)
@@ -30,8 +32,11 @@ function updateTrex(dt)
 		dx = vx * dt
 	end
 
-	if (love.keyboard.isDown("up") or love.keyboard.isDown("w")) and trex.onGround then
+	--if (love.keyboard.isDown("up") or love.keyboard.isDown("w")) and canJump(dt) then
+	if love.mouse.isDown(1) and canJump(dt) then
 		dy = -vy * dt
+	else
+		trex.jumpTime = trex.maxJumpTime
 	end
 
 	if love.keyboard.isDown("space") and trex.onGround then
@@ -41,7 +46,6 @@ function updateTrex(dt)
 	dy = dy + trex.gravity * dt
 
 	if dx ~= 0 or dy ~= 0 then
-		trex.anim = trex.run
 		local cols, len
 		trex.x, trex.y, cols, len = world: move(trex, trex.x + dx, trex.y + dy)
 
@@ -50,10 +54,29 @@ function updateTrex(dt)
 			local col = cols[i]
 			checkIfOnGround(col.normal.y)
 		end
+	end
+
+	if trex.onGround then
+		trex.anim = trex.run
 	else
 		trex.anim = trex.idle
 	end
 end
+
+function canJump(dt)
+	if trex.onGround then
+		trex.jumpTime = 0
+		return true
+	else
+		trex.jumpTime = trex.jumpTime + dt
+		if trex.jumpTime <= trex.maxJumpTime then
+			return true
+		end
+
+		return false
+	end
+end
+
 
 function checkIfOnGround(ny)
 	if ny < 0 then
