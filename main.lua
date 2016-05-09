@@ -32,15 +32,10 @@ function updateTrex(dt)
 		dx = vx * dt
 	end
 
-	--if (love.keyboard.isDown("up") or love.keyboard.isDown("w")) and canJump(dt) then
-	if love.mouse.isDown(1) and canJump(dt) then
+	if (love.mouse.isDown(1) or love.keyboard.isDown("space")) and canJump(dt) then
 		dy = -vy * dt
 	else
 		trex.jumpTime = trex.maxJumpTime
-	end
-
-	if love.keyboard.isDown("space") and trex.onGround then
-		trex.anim: flipH()
 	end
 
 	dy = dy + trex.gravity * dt
@@ -69,14 +64,13 @@ function canJump(dt)
 		return true
 	else
 		trex.jumpTime = trex.jumpTime + dt
-		if trex.jumpTime <= trex.maxJumpTime then
+		if trex.jumpTime < trex.maxJumpTime then
 			return true
 		end
 
 		return false
 	end
 end
-
 
 function checkIfOnGround(ny)
 	if ny < 0 then
