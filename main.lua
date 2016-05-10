@@ -1,9 +1,37 @@
 local anim8 = require 'anim8'
 local bump = require 'bump'
+local gamestate = require "gamestate"
+
+
+-- States
+local menu = {}
+local game = {}
+
+function love.load()
+	gamestate.registerEvents()
+	gamestate.switch(menu)
+end
+
+
+--------------------- MENU ---------------------
+------------------------------------------------
+
+function menu: draw()
+	love.graphics.print("Press Enter to continue")
+end
+
+function menu: keyreleased(key, code)
+	if key == 'return' then
+		gamestate.switch(game)
+	end
+end
+
+
+--------------------- GAME ---------------------
+------------------------------------------------
 
 -- World creation
 local world = bump.newWorld()
-
 
 -- Trex
 local trex = {
@@ -103,7 +131,7 @@ end
 
 ------------------------------------------------
 
-function love.load()
+function game: init()
 
 	image = love.graphics.newImage('media/trex.png')
 
@@ -122,20 +150,16 @@ function love.load()
 
 end
 
-function love.update(dt)
-
+function game: update(dt)
 	updateTrex(dt)
-
 end
 
-function love.draw()
-
+function game: draw()
 	drawBlocks()
 	drawTrex()
-
 end
 
-function love.keypressed(key)
+function game: keypressed(key)
     if key == "escape" then
        love.event.quit()
     end
@@ -147,13 +171,3 @@ function drawBox(box, r, g, b)
 	love.graphics.setColor(r, g, b)
 	love.graphics.rectangle("line", box.x, box.y, box.w, box.h)
 end
-
-
-
---[[function love.mousepressed(x, y, button, istouch)
-	local x, y = body: getLinearVelocity()
-	if button == 1 and y == 0 then
-		animation: flipH()
-		body: applyLinearImpulse(0,-2000)
-	end
-end]]
