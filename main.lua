@@ -56,10 +56,10 @@ function game: init()
 
 	trex = TRex(world, love.graphics.newImage('media/trex.png'), 200, 200)
 
-	addBlock(0, 0, 800, 32)
-	addBlock(0, 32, 32, 600 - 32*2)
-	addBlock(800 - 32, 32, 32, 600 - 32*2)
-	addBlock(0, 600-32, 800, 32)
+	--addBlock(0, 0, 640, 32)
+	--addBlock(0, 32, 32, 480 - 32*2)
+	--addBlock(640 - 32, 32, 32, 480 - 32*2)
+	addBlock(0, love.graphics.getHeight() - 32, love.graphics.getWidth(), 32)
 
 end
 
