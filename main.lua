@@ -2,6 +2,7 @@ local bump = require 'bump'
 local gamestate = require 'gamestate'
 
 require "trex"
+require "obstacle"
 
 -- States
 local menu = {}
@@ -51,10 +52,12 @@ end
 
 ------------------------------------------------
 local trex = {}
+local obstacle = {}
 
 function game: init()
 
-	trex = TRex(world, love.graphics.newImage('media/trex.png'), 200, 200)
+	trex = TRex(world, love.graphics.newImage('media/trex.png'), 100, love.graphics.getHeight() - 100)
+	obstacle = Obstacle(world, love.graphics.getWidth(), love.graphics.getHeight() - 70 - 32)
 
 	--addBlock(0, 0, 640, 32)
 	--addBlock(0, 32, 32, 480 - 32*2)
@@ -65,10 +68,12 @@ end
 
 function game: update(dt)
 	trex: update(dt)
+	obstacle: update(dt)
 end
 
 function game: draw()
 	trex: draw()
+	obstacle: draw()
 	drawBlocks()
 end
 

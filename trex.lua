@@ -19,19 +19,18 @@ TRex = Class {
 	end,
 	w = 76,
 	h = 76,
-	vx = 150,
 	vy = 600,
 	gravity = 300,
 	onGround = false,
-	maxJumpTime = 0.5,
+	maxJumpTime = 0.6,
 	jumpTime = maxJumpTime
 }
 
 function TRex: update(dt)
 	self.currentAnimation: update(dt)
 
-	local vx, vy = TRex.vx, TRex.vy
-	local dx, dy = 0, 0
+	local vy = TRex.vy
+	local dy = 0
 
 	if (love.mouse.isDown(1) or love.keyboard.isDown("space")) and TRex: canJump(dt) then
 		dy = -vy * dt
@@ -41,9 +40,9 @@ function TRex: update(dt)
 
 	dy = dy + TRex.gravity * dt
 
-	if dx ~= 0 or dy ~= 0 then
+	if dy ~= 0 then
 		local cols, len
-		self.x, self.y, cols, len = self.world: move(self, self.x + dx, self.y + dy)
+		self.x, self.y, cols, len = self.world: move(self, self.x, self.y + dy)
 
 		TRex.onGround = false
 		for i = 1, len do
