@@ -53,11 +53,13 @@ end
 ------------------------------------------------
 local trex = {}
 local obstacle = {}
+local background = {}
 
 function game: init()
 
 	trex = TRex(world, love.graphics.newImage('media/trex.png'), 100, love.graphics.getHeight() - 100)
-	obstacle = Obstacle(world, love.graphics.getWidth(), love.graphics.getHeight() - 70 - 32)
+	obstacle = Obstacle(world)
+	background = love.graphics.newImage('media/background.png')
 
 	--addBlock(0, 0, 640, 32)
 	--addBlock(0, 32, 32, 480 - 32*2)
@@ -72,9 +74,10 @@ function game: update(dt)
 end
 
 function game: draw()
+	love.graphics.draw(background, 0, 0)
 	trex: draw()
 	obstacle: draw()
-	drawBlocks()
+	--drawBlocks()
 end
 
 function game: keypressed(key)

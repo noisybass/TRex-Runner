@@ -8,10 +8,11 @@ TRex = Class {
 		self.x = x
 		self.y = y
 
-		local grid = anim8.newGrid(76, 76, 76*3, 76)
+		local grid = anim8.newGrid(76, 76, 76*4, 76)
 		self.animations = {}
-		self.animations.idle = anim8.newAnimation(grid(1, 1), 0.1)
-		self.animations.run = anim8.newAnimation(grid('2-3', 1), 0.1)
+		self.animations.idle =     anim8.newAnimation(grid(1, 1),     0.5)
+		self.animations.run =      anim8.newAnimation(grid('2-3', 1), 0.1)
+		self.animations.jump =     anim8.newAnimation(grid(4, 1),     0.5)
 		self.currentAnimation = self.animations.run
 
 		self.world = world
@@ -54,7 +55,7 @@ function TRex: update(dt)
 	if TRex.onGround then
 		self.currentAnimation = self.animations.run
 	else
-		self.currentAnimation = self.animations.idle
+		self.currentAnimation = self.animations.jump
 	end	
 end
 
