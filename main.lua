@@ -58,7 +58,7 @@ local background = {}
 function game: init()
 
 	trex = TRex(world, love.graphics.newImage('media/trex.png'), 100, love.graphics.getHeight() - 100)
-	obstacle = Obstacle(world)
+	obstacle = Obstacle(world, love.graphics.getWidth(), love.graphics.getHeight() - 32)
 	background = love.graphics.newImage('media/background.png')
 
 	--addBlock(0, 0, 640, 32)
