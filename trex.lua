@@ -20,10 +20,10 @@ TRex = Class {
 	end,
 	w = 76,
 	h = 76,
-	vy = 600,
-	gravity = 300,
+	vy = 1000,
+	gravity = 500,
 	onGround = false,
-	maxJumpTime = 0.6,
+	maxJumpTime = 0.5,
 	jumpTime = maxJumpTime
 }
 
