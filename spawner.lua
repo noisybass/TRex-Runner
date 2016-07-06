@@ -10,10 +10,17 @@ Spawner = Class {
 	end,
 	spawnTime = 2,
 	currentTime = 0,
-	obstacles = {}
+	obstacles = {},
+	remove = false,
+	removeIndx = 0
 }
 
 function Spawner: update(dt)
+
+	if self.remove then
+		table.remove(self.obstacles, self.removeIndx)
+		self.remove = false
+	end
 
 	self.currentTime = self.currentTime + dt
 
@@ -25,7 +32,14 @@ function Spawner: update(dt)
 	end
 
 	for i = 1, table.getn(self.obstacles) do
-		self.obstacles[i]: update(dt)
+		if self.obstacles[i]: isOutOfScreen() then
+			self.obstacles[i]: destroy()
+			self.remove = true
+			self.removeIndx = i
+			--table.remove(self.obstacles)
+		else
+			self.obstacles[i]: update(dt)
+		end
 	end
 end
 

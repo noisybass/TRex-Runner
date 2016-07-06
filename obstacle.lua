@@ -32,3 +32,15 @@ function Obstacle: draw()
 	love.graphics.draw(self.sprite, self.x, self.y)
 	--love.graphics.rectangle('fill', self.x, self.y, 50, 70)
 end
+
+function Obstacle: isOutOfScreen()
+	if self.x < - self.sprite: getWidth() then
+		return true
+	end
+
+	return false
+end
+
+function Obstacle: destroy()
+	self.world: remove(self)
+end
