@@ -8,7 +8,7 @@ Spawner = Class {
 		self.world = world
 
 	end,
-	spawnTime = 2,
+	spawnTime = 1.5,
 	currentTime = 0,
 	obstacles = {},
 	remove = false,

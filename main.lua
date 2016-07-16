@@ -55,6 +55,7 @@ end
 local trex = {}
 local background = {}
 local spawner = {}
+local points = 0
 
 function game: init()
 
@@ -70,6 +71,7 @@ function game: init()
 end
 
 function game: update(dt)
+	points = points + dt * 7.5
 	trex: update(dt)
 	spawner: update(dt)
 end
@@ -78,6 +80,8 @@ function game: draw()
 	love.graphics.draw(background, 0, 0)
 	trex: draw()
 	spawner: draw()
+
+	love.graphics.print(math.floor(points))
 end
 
 function game: keypressed(key)

@@ -22,6 +22,7 @@ Obstacle = Class {
 }
 
 function Obstacle: update(dt)
+	Obstacle.vx = Obstacle.vx + dt * 10
 	local vx = Obstacle.vx
 	local dx = -vx * dt
 
