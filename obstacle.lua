@@ -17,13 +17,10 @@ Obstacle = Class {
 
 		self.world = world
 		self.world: add(self, self.x, self.y, self.sprite: getWidth(), self.sprite: getHeight())
-	end,
-	vx = 300
+	end
 }
 
-function Obstacle: update(dt)
-	Obstacle.vx = Obstacle.vx + dt * 10
-	local vx = Obstacle.vx
+function Obstacle: update(dt, vx)
 	local dx = -vx * dt
 
 	self.x, self.y = self.world: move(self, self.x + dx, self.y)
