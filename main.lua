@@ -4,6 +4,7 @@ local gamestate = require 'gamestate'
 require "trex"
 require "obstacle"
 require "spawner"
+require "backgroundLayer"
 
 -- States
 local menu = {}
@@ -60,7 +61,8 @@ local points = 0
 function game: init()
 
 	trex = TRex(world, love.graphics.newImage('media/trex.png'), 100, love.graphics.getHeight() - 100)
-	background = love.graphics.newImage('media/background.png')
+	--background = love.graphics.newImage('media/background.png')
+	background = BackgroundLayer('media/background.png', 300, 0, 0)
 	spawner = Spawner(world)
 
 	--addBlock(0, 0, 640, 32)
@@ -72,12 +74,14 @@ end
 
 function game: update(dt)
 	points = points + dt * 7.5
+	background: update(dt)
 	trex: update(dt)
 	spawner: update(dt)
 end
 
 function game: draw()
-	love.graphics.draw(background, 0, 0)
+	--love.graphics.draw(background, 0, 0)
+	background: draw()
 	trex: draw()
 	spawner: draw()
 
