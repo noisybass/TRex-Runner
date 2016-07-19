@@ -4,7 +4,7 @@ local gamestate = require 'gamestate'
 require "trex"
 require "obstacle"
 require "spawner"
-require "backgroundLayer"
+require "background"
 
 -- States
 local menu = {}
@@ -62,7 +62,7 @@ function game: init()
 
 	trex = TRex(world, love.graphics.newImage('media/trex.png'), 100, love.graphics.getHeight() - 100)
 	--background = love.graphics.newImage('media/background.png')
-	background = BackgroundLayer('media/background.png', 300, 0, 0)
+	background = Background()
 	spawner = Spawner(world)
 
 	--addBlock(0, 0, 640, 32)
