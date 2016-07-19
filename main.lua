@@ -9,6 +9,7 @@ require "background"
 -- States
 local menu = {}
 local game = {}
+local gameOver = {}
 
 function love.load()
 	gamestate.registerEvents()
@@ -29,6 +30,19 @@ function menu: keyreleased(key, code)
 	end
 end
 
+
+--------------------- GAME OVER ---------------------
+-----------------------------------------------------
+
+function gameOver: draw()
+	love.graphics.print("Game Over", 300, 200)
+end
+
+function gameOver: keyreleased(key, code)
+	if key == 'return' then
+		gamestate.switch(game)
+	end
+end
 
 --------------------- GAME ---------------------
 ------------------------------------------------
