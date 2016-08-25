@@ -1,9 +1,12 @@
 local Class = require 'class'
 local anim8 = require 'anim8'
 local bump = require 'bump'
+local gamestate = require 'gamestate'
 
 TRex = Class {
-	init = function(self, world, sprite, x, y)
+	init = function(self, world, sprite, x, y, game)
+		self.game = game
+
 		self.sprite = sprite
 		self.x = x
 		self.y = y
@@ -48,7 +51,13 @@ function TRex: update(dt)
 		TRex.onGround = false
 		for i = 1, len do
 			local col = cols[i]
-			TRex: checkIfOnGround(col.normal.y)
+			local colObject = col.other
+			if colObject.isObstacle then
+				--TRex: die()
+				self.game: endGame()
+			else
+				TRex: checkIfOnGround(col.normal.y)
+			end
 		end
 	end
 

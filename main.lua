@@ -74,7 +74,7 @@ local points = 0
 
 function game: init()
 
-	trex = TRex(world, love.graphics.newImage('media/trex.png'), 100, love.graphics.getHeight() - 100)
+	trex = TRex(world, love.graphics.newImage('media/trex.png'), 100, love.graphics.getHeight() - 100, game)
 	--background = love.graphics.newImage('media/background.png')
 	background = Background()
 	spawner = Spawner(world)
@@ -106,6 +106,10 @@ function game: keypressed(key)
     if key == "escape" then
        love.event.quit()
     end
+end
+
+function game: endGame()
+	gamestate.switch(gameOver)
 end
 
 function drawBox(box, r, g, b)

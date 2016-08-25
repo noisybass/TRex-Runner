@@ -14,6 +14,7 @@ Obstacle = Class {
 		self.sprite = love.graphics.newImage(obstacles_sprites[i])
 		self.x = width
 		self.y = height - self.sprite: getHeight()
+		self.isObstacle = true
 
 		self.world = world
 		self.world: add(self, self.x, self.y, self.sprite: getWidth(), self.sprite: getHeight())
